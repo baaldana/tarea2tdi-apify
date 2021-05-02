@@ -34,6 +34,8 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = [env('HOST_URL')]
 
+API_HOST = ALLOWED_HOSTS[0]
+
 
 # Application definition
 
