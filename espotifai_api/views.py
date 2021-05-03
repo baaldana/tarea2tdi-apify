@@ -158,8 +158,8 @@ def artist_albums(request, artist_id):
         if album_serializer.is_valid():
             album_serializer.save()
             artist_url = f'{api_host_url}artists/{artist_id}/albums'
-            tracks_url = f'{api_host_url}artists/{artist_id}/tracks'
-            self_url = f'{api_host_url}artists/{artist_id}'
+            tracks_url = f'{api_host_url}albums/{data["id"]}/tracks'
+            self_url = f'{api_host_url}albums/{data["id"]}'
             data = {
                 'id': data['id'],
                 'artist_id': artist_id,
