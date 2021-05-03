@@ -418,6 +418,7 @@ def track_detail(request, track_id):
         data = {
             'id': track.id,
             'album_id': album.id,
+            'name': track.name,
             'duration': track.duration,
             'times_played': track.times_played,
             'artist': artist_url,
