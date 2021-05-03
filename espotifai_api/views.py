@@ -443,7 +443,7 @@ def track_play(request, track_id):
     if request.method == 'PUT':
         track.times_played += 1
         track.save()
-        return Response({'message': 'The track was played succesfully'} , status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'The track was played succesfully'} , status=status.HTTP_200_OK)
     else:
         return Response(
             {'message': f'{request.method} method not allowed for this request'},
@@ -464,7 +464,7 @@ def album_play(request, album_id):
         for track in tracks:
             track.times_played += 1
             track.save()
-        return Response({'message': 'The tracks were played succesfully'} , status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'The tracks were played succesfully'} , status=status.HTTP_200_OK)
     else:
         return Response(
             {'message': f'{request.method} method not allowed for this request'},
@@ -487,7 +487,7 @@ def artist_play(request, artist_id):
             for track in tracks:
                 track.times_played += 1
                 track.save()
-        return Response({'message': 'The tracks were played succesfully'} , status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'The tracks were played succesfully'} , status=status.HTTP_200_OK)
     else:
         return Response(
             {'message': f'{request.method} method not allowed for this request'},
