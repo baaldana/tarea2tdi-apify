@@ -40,9 +40,19 @@ def artists_list(request):
             return Response({'message': 'Request body is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
         artist_id = b64encode(data['name'].encode()).decode('utf-8')[:22]
         try:
-            Artist.objects.get(pk=artist_id)
-            print("Ya existe el ID")
-            return Response({'message': 'An existing artist already has that ID'}, status=status.HTTP_409_CONFLICT)
+            artist = Artist.objects.get(pk=artist_id)
+            albums_url = f'{api_host_url}artists/{artist_id}/albums'
+            tracks_url = f'{api_host_url}artists/{artist_id}/tracks'
+            self_url = f'{api_host_url}artists/{artist_id}'
+            data = {
+                'id': artist_id,
+                'name': artist.name,
+                'age': artist.age,
+                'albums': albums_url,
+                'tracks': tracks_url,
+                'self': self_url
+            }
+            return Response(data, status=status.HTTP_409_CONFLICT)
         except Artist.DoesNotExist:
             pass
         data = {'id': artist_id, **data} # Para ordenar el dict y se despliegue en el orden correspondiente
@@ -152,9 +162,20 @@ def artist_albums(request, artist_id):
         album_id = b64encode((f'{data["name"]}:{artist_id}').encode()).decode('utf-8')[:22]
 
         try:
-            Album.objects.get(pk=album_id)
-            print("Ya existe el ID")
-            return Response({'message': 'An existing album already has that ID'}, status=status.HTTP_409_CONFLICT)
+            album = Album.objects.get(pk=album_id)
+            artist_url = f'{api_host_url}artists/{artist_id}/albums'
+            tracks_url = f'{api_host_url}albums/{album_id}/tracks'
+            self_url = f'{api_host_url}albums/{album_id}'
+            data = {
+                'id': album_id,
+                'artist_id': artist_id,
+                'name': album.name,
+                'genre': album.genre,
+                'artist': artist_url,
+                'tracks': tracks_url,
+                'self': self_url
+            }
+            return Response(data, status=status.HTTP_409_CONFLICT)
         except Album.DoesNotExist:
             pass
         data = {'id': album_id, 'artist': artist_id, **data} # Para ordenar el dict y se despliegue en el orden correspondiente
@@ -336,9 +357,21 @@ def album_tracks(request, album_id):
             return Response({'message': 'Request body is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
         track_id = b64encode((f'{data["name"]}:{album_id}').encode()).decode('utf-8')[:22]
         try:
-            Track.objects.get(pk=track_id)
-            print("Ya existe el ID")
-            return Response({'message': 'An existing track already has that ID'}, status=status.HTTP_409_CONFLICT)
+            track = Track.objects.get(pk=track_id)
+            artist_url = f'{api_host_url}artists/{artist.id}'
+            album_url = f'{api_host_url}albums/{album_id}'
+            self_url = f'{api_host_url}tracks/{track_id}'
+            data = {
+                'id': track_id,
+                'album_id': album_id,
+                'name': track.name,
+                'duration': track.duration,
+                'times_played': track.times_played,
+                'artist': artist_url,
+                'album': album_url,
+                'self': self_url
+            }
+            return Response(data, status=status.HTTP_409_CONFLICT)
         except Track.DoesNotExist:
             pass
 
