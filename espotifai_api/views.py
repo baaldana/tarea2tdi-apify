@@ -36,6 +36,8 @@ def artists_list(request):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
+        if not data or len(data) < 2:
+            return Response({'message': 'Request body is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
         artist_id = b64encode(data['name'].encode()).decode('utf-8')[:22]
         try:
             Artist.objects.get(pk=artist_id)
@@ -145,6 +147,8 @@ def artist_albums(request, artist_id):
             )
 
         data = JSONParser().parse(request)
+        if not data or len(data) < 2:
+            return Response({'message': 'Request body is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
         album_id = b64encode((f'{data["name"]}:{artist_id}').encode()).decode('utf-8')[:22]
 
         try:
@@ -328,6 +332,8 @@ def album_tracks(request, album_id):
         return JsonResponse(response, safe=False)
     elif request.method == 'POST':
         data = JSONParser().parse(request)
+        if not data or len(data) < 2:
+            return Response({'message': 'Request body is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
         track_id = b64encode((f'{data["name"]}:{album_id}').encode()).decode('utf-8')[:22]
         try:
             Track.objects.get(pk=track_id)
