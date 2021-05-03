@@ -48,11 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework', #new
     'espotifai_api.apps.EspotifaiApiConfig', #new
-    #'corsheaders', #new
+    'corsheaders', #new
 ]
 
 MIDDLEWARE = [
-    #'corsheaders.middleware.CorsMiddleware', #new
+    'corsheaders.middleware.CorsMiddleware', #new
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
