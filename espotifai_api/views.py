@@ -318,20 +318,15 @@ def album_detail(request, album_id):
 @api_view(['GET', 'POST']) # Obtener todas las tracks de un album o crear una track de un album
 def album_tracks(request, album_id):
     #Revisar si existe el album id
-    try:
-        album = Album.objects.get(pk=album_id)
-        artist = Artist.objects.get(pk=album.artist.id)
-    except Album.DoesNotExist:
-        return JsonResponse(
-            {'message': 'The album does not exist'},
-            status=status.HTTP_404_NOT_FOUND
-        )
-    except Artist.DoesNotExist:
-        return JsonResponse(
-            {'message': 'The artist does not exist'},
-            status=status.HTTP_422_UNPROCESSABLE_ENTITY
-        )
     if request.method == 'GET':
+        try:
+            album = Album.objects.get(pk=album_id)
+            artist = Artist.objects.get(pk=album.artist.id)
+        except Album.DoesNotExist:
+            return JsonResponse(
+                {'message': 'The album does not exist'},
+                status=status.HTTP_404_NOT_FOUND
+            )
         tracks = Track.objects.filter(album=album_id)
         tracks_serializer = TrackSerializer(tracks, many=True)
         response = []
@@ -352,6 +347,19 @@ def album_tracks(request, album_id):
             response.insert(0, data)
         return JsonResponse(response, safe=False)
     elif request.method == 'POST':
+        try:
+            album = Album.objects.get(pk=album_id)
+            artist = Artist.objects.get(pk=album.artist.id)
+        except Album.DoesNotExist:
+            return JsonResponse(
+                {'message': 'The album does not exist'},
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY
+            )
+        except Artist.DoesNotExist:
+            return JsonResponse(
+                {'message': 'The artist does not exist'},
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY
+            )
         data = JSONParser().parse(request)
         if not data or len(data) < 2:
             return Response({'message': 'Request body is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
