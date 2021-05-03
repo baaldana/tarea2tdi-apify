@@ -37,9 +37,12 @@ def artists_list(request):
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         artist_id = b64encode(data['name'].encode()).decode('utf-8')[:22]
-        if Artist.objects.get(pk=artist_id):
+        try:
+            Artist.objects.get(pk=artist_id)
             print("Ya existe el ID")
             return Response({'message': 'An existing artist already has that ID'}, status=status.HTTP_409_CONFLICT)
+        except Artist.DoesNotExist:
+            pass
         data = {'id': artist_id, **data} # Para ordenar el dict y se despliegue en el orden correspondiente
         artist_serializer = ArtistSerializer(data=data)
         if artist_serializer.is_valid():
@@ -144,10 +147,12 @@ def artist_albums(request, artist_id):
         data = JSONParser().parse(request)
         album_id = b64encode((f'{data["name"]}:{artist_id}').encode()).decode('utf-8')[:22]
 
-        if Album.objects.get(pk=album_id):
+        try:
+            Album.objects.get(pk=album_id)
             print("Ya existe el ID")
             return Response({'message': 'An existing album already has that ID'}, status=status.HTTP_409_CONFLICT)
-
+        except Album.DoesNotExist:
+            pass
         data = {'id': album_id, 'artist': artist_id, **data} # Para ordenar el dict y se despliegue en el orden correspondiente
         album_serializer = AlbumSerializer(data=data)
         if album_serializer.is_valid():
@@ -322,14 +327,14 @@ def album_tracks(request, album_id):
             response.insert(0, data)
         return JsonResponse(response, safe=False)
     elif request.method == 'POST':
-        
-
         data = JSONParser().parse(request)
         track_id = b64encode((f'{data["name"]}:{album_id}').encode()).decode('utf-8')[:22]
-
-        if Track.objects.get(pk=track_id):
+        try:
+            Track.objects.get(pk=track_id)
             print("Ya existe el ID")
             return Response({'message': 'An existing track already has that ID'}, status=status.HTTP_409_CONFLICT)
+        except Track.DoesNotExist:
+            pass
 
         data = {'id': track_id, 'album': album_id, **data, 'times_played': 0} # Para ordenar el dict y se despliegue en el orden correspondiente
         track_serializer = TrackSerializer(data=data)
